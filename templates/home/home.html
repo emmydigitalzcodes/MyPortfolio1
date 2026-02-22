@@ -191,7 +191,7 @@
             </p>
         </div>
         
-        {% comment %} <div class="skills-grid">
+        {% comment %} {% comment %} <div class="skills-grid">
             {% comment %} {% for category in skill_categories %}
             <div class="skill-category-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
                 <h4 class="category-title">{{ category.name }}</h4>
@@ -315,7 +315,7 @@
                 </div>
             </div>
             {% comment %} {% endfor %}  {% endcomment %}
-        </div>
+        </div> {% endcomment %}
         
         <div class="text-center mt-5" data-aos="fade-up">
             <a href="{% url 'home:skills' %}" class="btn btn-outline-primary">
@@ -336,7 +336,7 @@
             </p>
         </div>
         
-        <div class="projects-grid">
+        {% comment %} <div class="projects-grid">
             {% for project in featured_projects %}
             <div class="project-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
                 <div class="project-image">
@@ -432,7 +432,7 @@
                 </div>
             </div>
             {% endfor %}
-        </div>
+        </div> {% endcomment %}
         
         <div class="text-center mt-5" data-aos="fade-up">
             <a href="{% url 'projects:list' %}" class="btn btn-primary">
