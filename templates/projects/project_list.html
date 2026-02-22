@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title|default:"Projects" }} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="page-title">{{ page_title|default:"My Projects" }}</h1>
+                <p class="page-description">
+                    A showcase of my recent work, featuring Django applications and web development projects.
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Projects</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section class="section projects-list-section">
+    <div class="container">
+        <!-- Filters -->
+        <div class="projects-filters" data-aos="fade-up">
+            <div class="filter-group">
+                <span class="filter-label">Filter by:</span>
+                <div class="filter-buttons">
+                    <a href="{% url 'projects:list' %}" 
+                       class="filter-btn {% if not current_category and not current_technology %}active{% endif %}">
+                        All
+                    </a>
+                    {% for category in categories %}
+                    <a href="?category={{ category.slug }}" 
+                       class="filter-btn {% if current_category == category.slug %}active{% endif %}">
+                        {{ category.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Search -->
+            <div class="search-box">
+                <form action="{% url 'projects:list' %}" method="get">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" 
+                               placeholder="Search projects..." 
+                               value="{{ search_query }}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Projects Grid -->
+        <div class="projects-grid">
+            {% for project in projects %}
+            <div class="project-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="project-image">
+                    {% if project.thumbnail %}
+                    <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" class="img-fluid">
+                    {% else %}
+                    <div class="project-placeholder">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    {% endif %}
+                    <div class="project-overlay">
+                        <div class="project-actions">
+                            {% if project.live_url %}
+                            <a href="{{ project.live_url }}" class="btn btn-light btn-sm" target="_blank" rel="noopener">
+                                <i class="fas fa-external-link-alt"></i>
+                                Live Demo
+                            </a>
+                            {% endif %}
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" class="btn btn-outline-light btn-sm" target="_blank" rel="noopener">
+                                <i class="fab fa-github"></i>
+                                Source
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-tags">
+                        {% for tech in project.technologies.all|slice:":3" %}
+                        <span class="tag" style="background-color: {{ tech.color }}">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <h4 class="project-title">
+                        <a href="{{ project.get_absolute_url }}">{{ project.title }}</a>
+                    </h4>
+                    <p class="project-description">{{ project.description|truncatewords:25 }}</p>
+                    <div class="project-footer">
+                        <a href="{{ project.get_absolute_url }}" class="project-link">
+                            View Details <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {% if project.completion_date %}
+                        <span class="project-date">
+                            <i class="far fa-calendar"></i>
+                            {{ project.completion_date|date:"M Y" }}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center" data-aos="fade-up">
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h4>No projects found</h4>
+                    <p>Check back later for new projects!</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav aria-label="Project pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Technologies Section -->
+<section class="section technologies-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Technologies</span>
+            <h2 class="section-title">Tools I Work With</h2>
+        </div>
+        
+        <div class="technologies-grid">
+            {% for tech in technologies %}
+            <a href="{% url 'projects:technology' tech.slug %}" class="technology-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:50 }}">
+                {% if tech.icon_class %}
+                <i class="{{ tech.icon_class }}"></i>
+                {% else %}
+                <i class="fas fa-code"></i>
+                {% endif %}
+                <span>{{ tech.name }}</span>
+            </a>
+            {% empty %}
+            <div class="technology-item" data-aos="fade-up">
+                <i class="fab fa-python"></i>
+                <span>Python</span>
+            </div>
+            <div class="technology-item" data-aos="fade-up" data-aos-delay="50">
+                <i class="fab fa-django"></i>
+                <span>Django</span>
+            </div>
+            <div class="technology-item" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-database"></i>
+                <span>PostgreSQL</span>
+            </div>
+            <div class="technology-item" data-aos="fade-up" data-aos-delay="150">
+                <i class="fab fa-js"></i>
+                <span>JavaScript</span>
+            </div>
+            <div class="technology-item" data-aos="fade-up" data-aos-delay="200">
+                <i class="fab fa-docker"></i>
+                <span>Docker</span>
+            </div>
+            <div class="technology-item" data-aos="fade-up" data-aos-delay="250">
+                <i class="fab fa-aws"></i>
+                <span>AWS</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

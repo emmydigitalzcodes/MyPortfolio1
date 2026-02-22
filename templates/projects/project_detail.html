@@ -1,0 +1,323 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.display_title }} - {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ project.description|truncatewords:30 }}{% endblock %}
+
+{% block content %}
+<!-- Project Header -->
+<section class="project-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto" data-aos="fade-up">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'projects:list' %}">Projects</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ project.title }}</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="project-title-large">{{ project.title }}</h1>
+                {% if project.subtitle %}
+                <p class="project-subtitle">{{ project.subtitle }}</p>
+                {% endif %}
+                
+                <div class="project-meta-header">
+                    {% if project.category %}
+                    <span class="project-category">
+                        <i class="fas fa-folder"></i>
+                        {{ project.category.name }}
+                    </span>
+                    {% endif %}
+                    {% if project.completion_date %}
+                    <span class="project-date">
+                        <i class="far fa-calendar"></i>
+                        {{ project.completion_date|date:"F Y" }}
+                    </span>
+                    {% endif %}
+                    {% if project.duration %}
+                    <span class="project-duration">
+                        <i class="far fa-clock"></i>
+                        {{ project.duration }}
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <div class="project-actions-header">
+                    {% if project.live_url %}
+                    <a href="{{ project.live_url }}" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
+                        <i class="fas fa-external-link-alt"></i>
+                        Live Demo
+                    </a>
+                    {% endif %}
+                    {% if project.github_url %}
+                    <a href="{{ project.github_url }}" class="btn btn-outline-primary btn-lg" target="_blank" rel="noopener">
+                        <i class="fab fa-github"></i>
+                        View Source
+                    </a>
+                    {% endif %}
+                    {% if project.documentation_url %}
+                    <a href="{{ project.documentation_url }}" class="btn btn-outline-secondary btn-lg" target="_blank" rel="noopener">
+                        <i class="fas fa-book"></i>
+                        Documentation
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Image -->
+<section class="project-hero-image">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto" data-aos="fade-up">
+                <div class="project-image-main">
+                    {% if project.thumbnail %}
+                    <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" class="img-fluid">
+                    {% else %}
+                    <div class="project-placeholder-large">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Content -->
+<section class="section project-content-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8" data-aos="fade-up">
+                <!-- Description -->
+                <div class="project-description-full">
+                    <h3>About This Project</h3>
+                    {{ project.content|linebreaks|default:project.description }}
+                </div>
+                
+                <!-- Key Features -->
+                {% if project.key_features_list %}
+                <div class="project-features">
+                    <h3>Key Features</h3>
+                    <ul class="feature-list">
+                        {% for feature in project.key_features_list %}
+                        <li><i class="fas fa-check-circle"></i> {{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                <!-- Challenges & Solutions -->
+                {% if project.challenges %}
+                <div class="project-challenges">
+                    <h3>Challenges</h3>
+                    {{ project.challenges|linebreaks }}
+                </div>
+                {% endif %}
+                
+                {% if project.solutions %}
+                <div class="project-solutions">
+                    <h3>Solutions</h3>
+                    {{ project.solutions|linebreaks }}
+                </div>
+                {% endif %}
+                
+                <!-- Architecture -->
+                {% if project.architecture %}
+                <div class="project-architecture">
+                    <h3>Technical Architecture</h3>
+                    {{ project.architecture|linebreaks }}
+                </div>
+                {% endif %}
+                
+                <!-- Gallery -->
+                {% if project.images.exists %}
+                <div class="project-gallery">
+                    <h3>Project Gallery</h3>
+                    <div class="gallery-grid">
+                        {% for image in project.images.all %}
+                        <div class="gallery-item">
+                            <a href="{{ image.image.url }}" data-lightbox="project-gallery" data-title="{{ image.caption }}">
+                                <img src="{{ image.image.url }}" alt="{{ image.caption|default:project.title }}" class="img-fluid">
+                            </a>
+                            {% if image.caption %}
+                            <p class="gallery-caption">{{ image.caption }}</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="project-sidebar">
+                    <!-- Technologies -->
+                    <div class="sidebar-widget">
+                        <h4>Technologies Used</h4>
+                        <div class="tech-tags">
+                            {% for tech in project.technologies.all %}
+                            <a href="{% url 'projects:technology' tech.slug %}" class="tech-tag-large" style="background-color: {{ tech.color }}">
+                                {% if tech.icon_class %}
+                                <i class="{{ tech.icon_class }}"></i>
+                                {% endif %}
+                                {{ tech.name }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Project Stats -->
+                    {% if project.stats.exists %}
+                    <div class="sidebar-widget">
+                        <h4>Project Stats</h4>
+                        <div class="project-stats-list">
+                            {% for stat in project.stats.all %}
+                            <div class="stat-row">
+                                {% if stat.icon_class %}
+                                <i class="{{ stat.icon_class }}"></i>
+                                {% endif %}
+                                <span class="stat-label">{{ stat.label }}</span>
+                                <span class="stat-value">{{ stat.value }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Client Info -->
+                    {% if project.client_name %}
+                    <div class="sidebar-widget">
+                        <h4>Client</h4>
+                        <p class="client-name"><i class="fas fa-building"></i> {{ project.client_name }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Project Date -->
+                    {% if project.project_date %}
+                    <div class="sidebar-widget">
+                        <h4>Project Date</h4>
+                        <p><i class="far fa-calendar"></i> {{ project.project_date|date:"F Y" }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Share -->
+                    <div class="sidebar-widget">
+                        <h4>Share Project</h4>
+                        <div class="share-buttons">
+                            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ project.title|urlencode }}" 
+                               target="_blank" rel="noopener" class="share-btn twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" 
+                               target="_blank" rel="noopener" class="share-btn linkedin">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" 
+                               target="_blank" rel="noopener" class="share-btn facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="mailto:?subject={{ project.title|urlencode }}&body={{ request.build_absolute_uri|urlencode }}" 
+                               class="share-btn email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Projects -->
+{% if related_projects %}
+<section class="section related-projects-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h3 class="section-title">Related Projects</h3>
+        </div>
+        
+        <div class="row">
+            {% for related in related_projects %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="project-card">
+                    <div class="project-image">
+                        {% if related.thumbnail %}
+                        <img src="{{ related.thumbnail.url }}" alt="{{ related.title }}" class="img-fluid">
+                        {% else %}
+                        <div class="project-placeholder">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="project-content">
+                        <div class="project-tags">
+                            {% for tech in related.technologies.all|slice:":2" %}
+                            <span class="tag" style="background-color: {{ tech.color }}">{{ tech.name }}</span>
+                            {% endfor %}
+                        </div>
+                        <h4 class="project-title">
+                            <a href="{{ related.get_absolute_url }}">{{ related.title }}</a>
+                        </h4>
+                        <p class="project-description">{{ related.description|truncatewords:15 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Project Navigation -->
+<section class="project-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                {% if previous_project %}
+                <a href="{{ previous_project.get_absolute_url }}" class="project-nav-prev">
+                    <span class="nav-label"><i class="fas fa-arrow-left"></i> Previous Project</span>
+                    <span class="nav-title">{{ previous_project.title }}</span>
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-6 text-end">
+                {% if next_project %}
+                <a href="{{ next_project.get_absolute_url }}" class="project-nav-next">
+                    <span class="nav-label">Next Project <i class="fas fa-arrow-right"></i></span>
+                    <span class="nav-title">{{ next_project.title }}</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Have a Similar Project?</h2>
+            <p class="cta-description">
+                Let's discuss how I can help bring your ideas to life.
+            </p>
+            <div class="cta-actions">
+                <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-paper-plane"></i>
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Lightbox for gallery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+{% endblock %}

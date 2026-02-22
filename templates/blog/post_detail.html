@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.display_title }} - {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ post.excerpt|truncatewords:30 }}{% endblock %}
+
+{% block content %}
+<!-- Reading Progress Bar -->
+<div class="reading-progress-container">
+    <div class="reading-progress-bar" id="readingProgress"></div>
+</div>
+
+<!-- Post Header -->
+<section class="post-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto" data-aos="fade-up">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'blog:list' %}">Blog</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+                    </ol>
+                </nav>
+                
+                {% if post.category %}
+                <a href="{{ post.category.get_absolute_url }}" class="post-category">
+                    {{ post.category.name }}
+                </a>
+                {% endif %}
+                
+                <h1 class="post-title">{{ post.title }}</h1>
+                
+                {% if post.subtitle %}
+                <p class="post-subtitle">{{ post.subtitle }}</p>
+                {% endif %}
+                
+                <div class="post-meta">
+                    <div class="post-author">
+                        {% if post.author %}
+                        <span>By <strong>{{ post.author.get_full_name|default:post.author.username }}</strong></span>
+                        {% endif %}
+                    </div>
+                    <div class="post-date">
+                        <i class="far fa-calendar"></i>
+                        {{ post.published_at|date:"F d, Y" }}
+                    </div>
+                    <div class="post-reading-time">
+                        <i class="far fa-clock"></i>
+                        {{ post.reading_time }} min read
+                    </div>
+                    <div class="post-views">
+                        <i class="far fa-eye"></i>
+                        {{ post.views_count }} views
+                    </div>
+                </div>
+                
+                {% if post.tags.exists %}
+                <div class="post-tags-header">
+                    {% for tag in post.tags.all %}
+                    <a href="{{ tag.get_absolute_url }}" class="tag-small">#{{ tag.name }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Image -->
+{% if post.featured_image %}
+<section class="post-featured-image">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto" data-aos="fade-up">
+                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Post Content -->
+<section class="section post-content-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <article class="post-content" data-aos="fade-up">
+                    {{ post.content|linebreaks }}
+                </article>
+                
+                <!-- Share -->
+                <div class="post-share" data-aos="fade-up">
+                    <h5>Share this article</h5>
+                    <div class="share-buttons-large">
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri|urlencode }}&text={{ post.title|urlencode }}" 
+                           target="_blank" rel="noopener" class="share-btn-large twitter">
+                            <i class="fab fa-twitter"></i>
+                            Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri|urlencode }}" 
+                           target="_blank" rel="noopener" class="share-btn-large linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                            LinkedIn
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" 
+                           target="_blank" rel="noopener" class="share-btn-large facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            Facebook
+                        </a>
+                        <a href="mailto:?subject={{ post.title|urlencode }}&body={{ request.build_absolute_uri|urlencode }}" 
+                           class="share-btn-large email">
+                            <i class="fas fa-envelope"></i>
+                            Email
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Author Box -->
+                {% if post.author %}
+                <div class="author-box" data-aos="fade-up">
+                    <div class="author-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="author-info">
+                        <h5>{{ post.author.get_full_name|default:post.author.username }}</h5>
+                        <p>Django developer and technical writer sharing insights on web development.</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Comments -->
+                {% if comments %}
+                <div class="post-comments" data-aos="fade-up">
+                    <h3>Comments ({{ comments.count }})</h3>
+                    <div class="comments-list">
+                        {% for comment in comments %}
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <strong>{{ comment.name }}</strong>
+                                <span>{{ comment.created_at|date:"M d, Y" }}</span>
+                            </div>
+                            <p>{{ comment.content }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Posts -->
+{% if related_posts %}
+<section class="section related-posts-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <h3 class="section-title">Related Articles</h3>
+        </div>
+        
+        <div class="row">
+            {% for related in related_posts %}
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <article class="blog-card">
+                    <div class="blog-image">
+                        {% if related.featured_image %}
+                        <img src="{{ related.featured_image.url }}" alt="{{ related.title }}" class="img-fluid">
+                        {% else %}
+                        <div class="blog-placeholder">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> {{ related.published_at|date:"M d, Y" }}</span>
+                        </div>
+                        <h4 class="blog-title">
+                            <a href="{{ related.get_absolute_url }}">{{ related.title }}</a>
+                        </h4>
+                        <p class="blog-excerpt">{{ related.excerpt|truncatewords:15 }}</p>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Post Navigation -->
+<section class="post-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                {% if previous_post %}
+                <a href="{{ previous_post.get_absolute_url }}" class="post-nav-prev">
+                    <span class="nav-label"><i class="fas fa-arrow-left"></i> Previous Article</span>
+                    <span class="nav-title">{{ previous_post.title }}</span>
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-6 text-end">
+                {% if next_post %}
+                <a href="{{ next_post.get_absolute_url }}" class="post-nav-next">
+                    <span class="nav-label">Next Article <i class="fas fa-arrow-right"></i></span>
+                    <span class="nav-title">{{ next_post.title }}</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter CTA -->
+<section class="section cta-section cta-newsletter">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Enjoyed this article?</h2>
+            <p class="cta-description">
+                Subscribe to get more Django tips and tutorials delivered to your inbox.
+            </p>
+            <form action="{% url 'blog:newsletter_subscribe' %}" method="post" class="newsletter-form-inline">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="email" name="email" class="form-control form-control-lg" 
+                           placeholder="Enter your email" required>
+                    <button type="submit" class="btn btn-light btn-lg">
+                        <i class="fas fa-paper-plane"></i>
+                        Subscribe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

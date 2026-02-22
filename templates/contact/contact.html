@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="page-title">Get In Touch</h1>
+                <p class="page-description">
+                    Have a project in mind or want to collaborate? I'd love to hear from you.
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Contact</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section contact-section">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Info -->
+            <div class="col-lg-4" data-aos="fade-right">
+                <div class="contact-info-card">
+                    <h3>Contact Information</h3>
+                    <p class="contact-intro">
+                        Feel free to reach out through any of the following channels. I'll get back to you as soon as possible.
+                    </p>
+                    
+                    {% if contact_info %}
+                    <div class="contact-details">
+                        {% if contact_info.email %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h5>Email</h5>
+                                <a href="mailto:{{ contact_info.email }}">{{ contact_info.email }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if contact_info.phone %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h5>Phone</h5>
+                                <a href="tel:{{ contact_info.phone }}">{{ contact_info.phone }}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if contact_info.location %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h5>Location</h5>
+                                <span>{{ contact_info.location }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if contact_info.working_hours %}
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-text">
+                                <h5>Working Hours</h5>
+                                <span>{{ contact_info.working_hours }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Social Links -->
+                    <div class="contact-social">
+                        <h5>Follow Me</h5>
+                        <div class="social-links-large">
+                            {% if GITHUB_URL %}
+                            <a href="{{ GITHUB_URL }}" target="_blank" rel="noopener" aria-label="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            {% endif %}
+                            {% if LINKEDIN_URL %}
+                            <a href="{{ LINKEDIN_URL }}" target="_blank" rel="noopener" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            {% endif %}
+                            {% if TWITTER_URL %}
+                            <a href="{{ TWITTER_URL }}" target="_blank" rel="noopener" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            {% endif %}
+                            {% for link in social_links %}
+                            <a href="{{ link.url }}" target="_blank" rel="noopener" aria-label="{{ link.name }}">
+                                <i class="{{ link.display_icon }}"></i>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Form -->
+            <div class="col-lg-8" data-aos="fade-left">
+                <div class="contact-form-card">
+                    <h3>Send a Message</h3>
+                    <p class="form-intro">
+                        Fill out the form below and I'll get back to you within 24 hours.
+                    </p>
+                    
+                    <form action="{% url 'contact:contact' %}" method="post" id="contactForm" class="contact-form">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_name">Your Name *</label>
+                                    <input type="text" name="name" id="id_name" class="form-control" 
+                                           placeholder="John Doe" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_email">Email Address *</label>
+                                    <input type="email" name="email" id="id_email" class="form-control" 
+                                           placeholder="john@example.com" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_phone">Phone Number</label>
+                                    <input type="tel" name="phone" id="id_phone" class="form-control" 
+                                           placeholder="+1 (555) 123-4567">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_company">Company</label>
+                                    <input type="text" name="company" id="id_company" class="form-control" 
+                                           placeholder="Your Company">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_reason">Reason for Contact *</label>
+                            <select name="reason" id="id_reason" class="form-select" required>
+                                <option value="general">General Inquiry</option>
+                                <option value="project">Project Collaboration</option>
+                                <option value="job">Job Opportunity</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_subject">Subject *</label>
+                            <input type="text" name="subject" id="id_subject" class="form-control" 
+                                   placeholder="How can I help you?" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_message">Message *</label>
+                            <textarea name="message" id="id_message" class="form-control" rows="6" 
+                                      placeholder="Tell me about your project..." required></textarea>
+                            <small class="form-text">Minimum 20 characters</small>
+                        </div>
+                        
+                        <!-- reCAPTCHA placeholder - add your site key -->
+                        <div class="form-group">
+                            <div class="g-recaptcha" data-sitekey="6LdCGHQsAAAAAHFGKL2z3jdAU2RBcH4t3SY99Ci8"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+{% if contact_info.map_embed_url %}
+<section class="map-section">
+    <div class="map-container">
+        <iframe src="{{ contact_info.map_embed_url }}" width="100%" height="400" 
+                style="border:0;" allowfullscreen="" loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+</section>
+{% endif %}
+
+<!-- FAQ Section -->
+{% if faqs %}
+<section class="section faq-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">FAQ</span>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="accordion" id="faqAccordion">
+                    {% for faq in faqs %}
+                    <div class="accordion-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:50 }}">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" 
+                                    type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq{{ forloop.counter }}">
+                                {{ faq.question }}
+                            </button>
+                        </h2>
+                        <div id="faq{{ forloop.counter }}" 
+                             class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                             data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ faq.answer|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="section cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Prefer to Schedule a Call?</h2>
+            <p class="cta-description">
+                Book a free 30-minute consultation to discuss your project requirements.
+            </p>
+            <div class="cta-actions">
+                <a href="mailto:{{ contact_info.email|default:personal_info.email }}?subject=Schedule%20a%20Call" class="btn btn-light btn-lg">
+                    <i class="fas fa-calendar-alt"></i>
+                    Schedule a Call
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- reCAPTCHA -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}

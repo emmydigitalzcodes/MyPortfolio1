@@ -1,0 +1,12 @@
+/* TEAM */
+Developer: {{ personal_info.full_name|default:"Your Name" }}
+Site: {{ SITE_URL }}
+{% if personal_info.email %}Email: {{ personal_info.email }}{% endif %}
+{% if personal_info.location %}Location: {{ personal_info.location }}{% endif %}
+
+/* SITE */
+Last update: {% now "Y/m/d" %}
+Language: English
+Doctype: HTML5
+Framework: Django
+CMS: Django Admin

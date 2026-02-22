@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Message Sent - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<!-- Success Section -->
+<section class="section success-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 class="success-title">Message Sent Successfully!</h1>
+                <p class="success-message">
+                    Thank you for reaching out. I've received your message and will get back to you within 24 hours.
+                </p>
+                <div class="success-actions">
+                    <a href="{% url 'home:home' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home"></i>
+                        Back to Home
+                    </a>
+                    <a href="{% url 'projects:list' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-project-diagram"></i>
+                        View Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Next Steps Section -->
+<section class="section next-steps-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <h2 class="section-title">What Happens Next?</h2>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h4>Review</h4>
+                    <p>I'll review your message and understand your requirements.</p>
+                </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h4>Response</h4>
+                    <p>I'll get back to you with my thoughts and next steps.</p>
+                </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h4>Collaboration</h4>
+                    <p>We'll start working together on your project.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

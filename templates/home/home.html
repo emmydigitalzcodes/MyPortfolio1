@@ -1,0 +1,704 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ personal_info.full_name|default:"Django Developer" }} - {{ personal_info.title|default:"Full Stack Developer" }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" id="home">
+    <div class="hero-bg">
+        <div class="hero-shape shape-1"></div>
+        <div class="hero-shape shape-2"></div>
+        <div class="hero-shape shape-3"></div>
+    </div>
+    
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="badge-icon"><i class="fas fa-circle text-success"></i></span>
+                        <span>Available for new projects</span>
+                    </div>
+                    
+                    <h1 class="hero-title">
+                        Hi, I'm <span class="text-gradient">{{ personal_info.first_name|default:"Developer" }}</span>
+                    </h1>
+                    
+                    <h2 class="hero-subtitle">{{ personal_info.title|default:"Full Stack Django Developer" }}</h2>
+                    
+                    <p class="hero-description">
+                        {{ personal_info.tagline|default:"I build scalable, secure, and user-friendly web applications using Django and modern technologies." }}
+                    </p>
+                    
+                    <div class="hero-actions">
+                        <a href="{% url 'projects:list' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-rocket"></i>
+                            View My Work
+                        </a>
+                        <a href="{% url 'contact:contact' %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-envelope"></i>
+                            Get In Touch
+                        </a>
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">{{ personal_info.years_of_experience|default:"5" }}+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ personal_info.projects_completed|default:"50" }}+</span>
+                            <span class="stat-label">Projects Completed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ personal_info.happy_clients|default:"30" }}+</span>
+                            <span class="stat-label">Happy Clients</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+                <div class="hero-image-wrapper">
+                    <div class="hero-image">
+                        {% if personal_info.profile_photo %}
+                        <img src="{{ personal_info.profile_photo.url }}" alt="{{ personal_info.full_name }}" class="img-fluid">
+                        {% else %}
+                        <div class="hero-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Floating Tech Icons -->
+                    <div class="floating-icon icon-1">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <div class="floating-icon icon-2">
+                        <i class="fab fa-react"></i>
+                    </div>
+                    <div class="floating-icon icon-3">
+                        <i class="fab fa-django"></i>
+                    </div>
+                    <div class="floating-icon icon-4">
+                        <i class="fab fa-docker"></i>
+                    </div>
+                    <div class="floating-icon icon-5">
+                        <i class="fab fa-aws"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Down Indicator -->
+    <div class="scroll-down">
+        <a href="#about" class="scroll-link">
+            <span>Scroll Down</span>
+            <i class="fas fa-chevron-down"></i>
+        </a>
+    </div>
+</section>
+
+<!-- About Preview Section -->
+<section class="section about-preview" id="about">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="about-image">
+                    <div class="about-image-main">
+                        {% if personal_info.profile_photo %}
+                        <img src="{{ personal_info.profile_photo.url }}" alt="About {{ personal_info.full_name }}" class="img-fluid">
+                        {% else %}
+                        <div class="about-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="experience-badge">
+                        <span class="exp-number">{{ personal_info.years_of_experience|default:"5" }}</span>
+                        <span class="exp-text">Years of<br>Experience</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="section-header">
+                    <span class="section-subtitle">About Me</span>
+                    <h2 class="section-title">Passionate Django Developer</h2>
+                </div>
+                
+                <div class="about-content">
+                    <p class="lead">
+                        {{ personal_info.bio|default:"I'm a dedicated Django developer with a passion for building clean, efficient, and scalable web applications." }}
+                    </p>
+                    
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h5>Clean Code</h5>
+                                <p>Writing maintainable, well-documented code following best practices</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h5>Scalable Solutions</h5>
+                                <p>Building applications that grow with your business needs</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h5>Security First</h5>
+                                <p>Implementing robust security measures to protect your data</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-actions">
+                        <a href="{% url 'home:about' %}" class="btn btn-primary">
+                            Learn More About Me
+                        </a>
+                        {% if personal_info.resume %}
+                        <a href="{{ personal_info.resume.url }}" class="btn btn-outline-primary" target="_blank">
+                            <i class="fas fa-download"></i>
+                            Download CV
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="section skills-section" id="skills">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">My Skills</span>
+            <h2 class="section-title">Technologies I Work With</h2>
+            <p class="section-description">
+                I specialize in the Django ecosystem and modern web development technologies
+            </p>
+        </div>
+        
+        <div class="skills-grid">
+            {% for category in skill_categories %}
+            <div class="skill-category-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <h4 class="category-title">{{ category.name }}</h4>
+                <div class="skills-list">
+                    {% for skill in category.skills.all|slice:":6" %}
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name">
+                                {% if skill.icon_class %}
+                                <i class="{{ skill.icon_class }}"></i>
+                                {% endif %}
+                                {{ skill.name }}
+                            </span>
+                            <span class="skill-percentage">{{ skill.proficiency }}%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: {{ skill.proficiency }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default skills if none in database -->
+            <div class="skill-category-card" data-aos="fade-up">
+                <h4 class="category-title">Backend</h4>
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fab fa-python"></i> Python/Django</span>
+                            <span class="skill-percentage">95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fas fa-database"></i> PostgreSQL</span>
+                            <span class="skill-percentage">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fas fa-server"></i> REST APIs</span>
+                            <span class="skill-percentage">88%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 88%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="skill-category-card" data-aos="fade-up" data-aos-delay="100">
+                <h4 class="category-title">Frontend</h4>
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fab fa-js"></i> JavaScript</span>
+                            <span class="skill-percentage">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fab fa-react"></i> React/Vue</span>
+                            <span class="skill-percentage">80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fab fa-bootstrap"></i> Bootstrap/Tailwind</span>
+                            <span class="skill-percentage">92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 92%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="skill-category-card" data-aos="fade-up" data-aos-delay="200">
+                <h4 class="category-title">DevOps</h4>
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fab fa-docker"></i> Docker</span>
+                            <span class="skill-percentage">82%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 82%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fab fa-aws"></i> AWS</span>
+                            <span class="skill-percentage">78%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-info">
+                            <span class="skill-name"><i class="fab fa-git-alt"></i> Git/GitHub</span>
+                            <span class="skill-percentage">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="{% url 'home:skills' %}" class="btn btn-outline-primary">
+                View All Skills
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Projects Section -->
+<section class="section projects-section" id="projects">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Portfolio</span>
+            <h2 class="section-title">Featured Projects</h2>
+            <p class="section-description">
+                A selection of my recent work showcasing Django development expertise
+            </p>
+        </div>
+        
+        <div class="projects-grid">
+            {% for project in featured_projects %}
+            <div class="project-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="project-image">
+                    {% if project.thumbnail %}
+                    <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" class="img-fluid">
+                    {% else %}
+                    <div class="project-placeholder">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    {% endif %}
+                    <div class="project-overlay">
+                        <div class="project-actions">
+                            {% if project.live_url %}
+                            <a href="{{ project.live_url }}" class="btn btn-light btn-sm" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
+                                Live Demo
+                            </a>
+                            {% endif %}
+                            {% if project.github_url %}
+                            <a href="{{ project.github_url }}" class="btn btn-outline-light btn-sm" target="_blank">
+                                <i class="fab fa-github"></i>
+                                Source Code
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-tags">
+                        {% for tech in project.technologies.all|slice:":3" %}
+                        <span class="tag" style="background-color: {{ tech.color }}">{{ tech.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <h4 class="project-title">
+                        <a href="{{ project.get_absolute_url }}">{{ project.title }}</a>
+                    </h4>
+                    <p class="project-description">{{ project.description|truncatewords:20 }}</p>
+                    <a href="{{ project.get_absolute_url }}" class="project-link">
+                        View Details <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default projects if none in database -->
+            <div class="project-card" data-aos="fade-up">
+                <div class="project-image">
+                    <div class="project-placeholder">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="tag" style="background-color: #092e20">Django</span>
+                        <span class="tag" style="background-color: #336791">PostgreSQL</span>
+                        <span class="tag" style="background-color: #f7df1e">JavaScript</span>
+                    </div>
+                    <h4 class="project-title">E-Commerce Platform</h4>
+                    <p class="project-description">A full-featured e-commerce platform with payment integration, inventory management, and admin dashboard.</p>
+                </div>
+            </div>
+            
+            <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="project-image">
+                    <div class="project-placeholder">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="tag" style="background-color: #092e20">Django</span>
+                        <span class="tag" style="background-color: #61dafb">React</span>
+                        <span class="tag" style="background-color: #2496ed">Docker</span>
+                    </div>
+                    <h4 class="project-title">Project Management System</h4>
+                    <p class="project-description">Collaborative project management tool with real-time updates, task tracking, and team analytics.</p>
+                </div>
+            </div>
+            
+            <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="project-image">
+                    <div class="project-placeholder">
+                        <i class="fas fa-blog"></i>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <div class="project-tags">
+                        <span class="tag" style="background-color: #092e20">Django</span>
+                        <span class="tag" style="background-color: #38bdf8">Tailwind</span>
+                        <span class="tag" style="background-color: #ff9900">AWS</span>
+                    </div>
+                    <h4 class="project-title">Content Management System</h4>
+                    <p class="project-description">Custom CMS with markdown support, SEO optimization, and multi-user collaboration features.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="{% url 'projects:list' %}" class="btn btn-primary">
+                View All Projects
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="section services-section" id="services">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Services</span>
+            <h2 class="section-title">What I Can Do For You</h2>
+            <p class="section-description">
+                Comprehensive web development services tailored to your needs
+            </p>
+        </div>
+        
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="service-icon">
+                    <i class="{{ service.icon_class }}"></i>
+                </div>
+                <h4 class="service-title">{{ service.title }}</h4>
+                <p class="service-description">{{ service.description }}</p>
+                {% if service.features_list %}
+                <ul class="service-features">
+                    {% for feature in service.features_list|slice:":4" %}
+                    <li><i class="fas fa-check"></i> {{ feature }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% empty %}
+            <!-- Default services if none in database -->
+            <div class="service-card" data-aos="fade-up">
+                <div class="service-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h4 class="service-title">Web Development</h4>
+                <p class="service-description">Custom web applications built with Django, from simple websites to complex enterprise solutions.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Full-stack development</li>
+                    <li><i class="fas fa-check"></i> API development</li>
+                    <li><i class="fas fa-check"></i> Database design</li>
+                    <li><i class="fas fa-check"></i> Third-party integrations</li>
+                </ul>
+            </div>
+            
+            <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h4 class="service-title">API Development</h4>
+                <p class="service-description">RESTful and GraphQL APIs designed for performance, security, and scalability.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> REST API design</li>
+                    <li><i class="fas fa-check"></i> Authentication & authorization</li>
+                    <li><i class="fas fa-check"></i> API documentation</li>
+                    <li><i class="fas fa-check"></i> Rate limiting</li>
+                </ul>
+            </div>
+            
+            <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h4 class="service-title">Deployment & DevOps</h4>
+                <p class="service-description">Cloud deployment, CI/CD pipelines, and infrastructure management.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> AWS/GCP deployment</li>
+                    <li><i class="fas fa-check"></i> Docker containerization</li>
+                    <li><i class="fas fa-check"></i> CI/CD setup</li>
+                    <li><i class="fas fa-check"></i> Monitoring & logging</li>
+                </ul>
+            </div>
+            
+            <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h4 class="service-title">Maintenance & Support</h4>
+                <p class="service-description">Ongoing support, updates, and optimization for your Django applications.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Bug fixes</li>
+                    <li><i class="fas fa-check"></i> Security updates</li>
+                    <li><i class="fas fa-check"></i> Performance optimization</li>
+                    <li><i class="fas fa-check"></i> Feature additions</li>
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+{% if testimonials %}
+<section class="section testimonials-section" id="testimonials">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Testimonials</span>
+            <h2 class="section-title">What Clients Say</h2>
+        </div>
+        
+        <div class="testimonials-slider" data-aos="fade-up">
+            <div class="row">
+                {% for testimonial in testimonials|slice:":3" %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= testimonial.rating %}
+                                <i class="fas fa-star"></i>
+                                {% else %}
+                                <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p class="testimonial-content">"{{ testimonial.content }}"</p>
+                        <div class="testimonial-author">
+                            {% if testimonial.photo %}
+                            <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}" class="author-image">
+                            {% else %}
+                            <div class="author-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {% endif %}
+                            <div class="author-info">
+                                <h5 class="author-name">{{ testimonial.name }}</h5>
+                                <p class="author-position">{{ testimonial.position }}{% if testimonial.company %}, {{ testimonial.company }}{% endif %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Blog Preview Section -->
+<section class="section blog-section" id="blog">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Blog</span>
+            <h2 class="section-title">Latest Articles</h2>
+            <p class="section-description">
+                Insights, tutorials, and thoughts on Django development
+            </p>
+        </div>
+        
+        <div class="blog-grid">
+            {% for post in recent_posts %}
+            <article class="blog-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="blog-image">
+                    {% if post.featured_image %}
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" class="img-fluid">
+                    {% else %}
+                    <div class="blog-placeholder">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    {% endif %}
+                    {% if post.category %}
+                    <span class="blog-category">{{ post.category.name }}</span>
+                    {% endif %}
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> {{ post.published_at|date:"M d, Y" }}</span>
+                        <span><i class="far fa-clock"></i> {{ post.reading_time }} min read</span>
+                    </div>
+                    <h4 class="blog-title">
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </h4>
+                    <p class="blog-excerpt">{{ post.excerpt|truncatewords:20 }}</p>
+                    <a href="{{ post.get_absolute_url }}" class="blog-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <!-- Default blog posts if none in database -->
+            <article class="blog-card" data-aos="fade-up">
+                <div class="blog-image">
+                    <div class="blog-placeholder">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <span class="blog-category">Django</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> Jan 15, 2024</span>
+                        <span><i class="far fa-clock"></i> 5 min read</span>
+                    </div>
+                    <h4 class="blog-title">Django Best Practices for 2024</h4>
+                    <p class="blog-excerpt">Learn the latest best practices for building scalable Django applications...</p>
+                </div>
+            </article>
+            
+            <article class="blog-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="blog-image">
+                    <div class="blog-placeholder">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <span class="blog-category">Database</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> Jan 10, 2024</span>
+                        <span><i class="far fa-clock"></i> 8 min read</span>
+                    </div>
+                    <h4 class="blog-title">Optimizing Django ORM Queries</h4>
+                    <p class="blog-excerpt">Improve your application performance with these ORM optimization techniques...</p>
+                </div>
+            </article>
+            
+            <article class="blog-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="blog-image">
+                    <div class="blog-placeholder">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span class="blog-category">Security</span>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> Jan 5, 2024</span>
+                        <span><i class="far fa-clock"></i> 6 min read</span>
+                    </div>
+                    <h4 class="blog-title">Securing Your Django Application</h4>
+                    <p class="blog-excerpt">Essential security practices every Django developer should implement...</p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="{% url 'blog:list' %}" class="btn btn-outline-primary">
+                View All Articles
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section" id="cta">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Ready to Start Your Project?</h2>
+            <p class="cta-description">
+                Let's collaborate to bring your ideas to life. I'm always excited to work on new challenges.
+            </p>
+            <div class="cta-actions">
+                <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-paper-plane"></i>
+                    Get In Touch
+                </a>
+                <a href="{% url 'projects:list' %}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-eye"></i>
+                    View Portfolio
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

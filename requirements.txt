@@ -1,0 +1,28 @@
+# Django
+Django>=4.2,<5.0
+
+# Database
+# psycopg2-binary>=2.9.0  # Uncomment for PostgreSQL
+
+# Static Files
+whitenoise>=6.0.0
+
+# Server
+gunicorn>=20.1.0
+
+# Images
+Pillow>=9.0.0
+
+# Forms
+django-crispy-forms>=2.0
+crispy-bootstrap5>=0.7
+
+# Environment Variables
+python-decouple>=3.6
+
+# Security
+django-recaptcha>=3.0.0  # Optional
+
+# Development (uncomment for development)
+# django-debug-toolbar>=4.0.0
+# django-extensions>=3.2.0
