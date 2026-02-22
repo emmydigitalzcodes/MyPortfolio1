@@ -191,7 +191,7 @@
             </p>
         </div>
         
-        <div class="skills-grid">
+        {% comment %} <div class="skills-grid">
             {% comment %} {% for category in skill_categories %}
             <div class="skill-category-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
                 <h4 class="category-title">{{ category.name }}</h4>
@@ -214,7 +214,7 @@
                     {% endfor %}
                 </div> {% endcomment %}
             </div>
-            {% empty %}
+            {% empty %} {% endcomment %}
             <!-- Default skills if none in database -->
             <div class="skill-category-card" data-aos="fade-up">
                 <h4 class="category-title">Backend</h4>
