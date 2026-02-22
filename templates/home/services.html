@@ -1,0 +1,515 @@
+{% extends 'base.html' %}
+
+{% block title %}Services - {{ personal_info.full_name|default:"Django Developer" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="page-title">My Services</h1>
+                <p class="page-description">
+                    Professional web development services tailored to your business needs
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Services</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="section services-detail-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">What I Offer</span>
+            <h2 class="section-title">Services I Provide</h2>
+            <p class="section-description">
+                From concept to deployment, I deliver high-quality web solutions
+            </p>
+        </div>
+        
+        <div class="services-detail-grid">
+            {% for service in services %}
+            <div class="service-detail-card" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="service-icon-large">
+                    <i class="{{ service.icon_class }}"></i>
+                </div>
+                <div class="service-detail-content">
+                    <h3 class="service-detail-title">{{ service.title }}</h3>
+                    <p class="service-detail-description">{{ service.description }}</p>
+                    {% if service.features_list %}
+                    <ul class="service-detail-features">
+                        {% for feature in service.features_list %}
+                        <li><i class="fas fa-check-circle"></i> {{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default Services -->
+            <div class="service-detail-card" data-aos="fade-up">
+                <div class="service-icon-large">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="service-detail-content">
+                    <h3 class="service-detail-title">Web Development</h3>
+                    <p class="service-detail-description">
+                        Custom web applications built with Django, from simple websites to complex enterprise solutions.
+                    </p>
+                    <ul class="service-detail-features">
+                        <li><i class="fas fa-check-circle"></i> Full-stack development</li>
+                        <li><i class="fas fa-check-circle"></i> API development</li>
+                        <li><i class="fas fa-check-circle"></i> Database design</li>
+                        <li><i class="fas fa-check-circle"></i> Third-party integrations</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="service-detail-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-icon-large">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="service-detail-content">
+                    <h3 class="service-detail-title">API Development</h3>
+                    <p class="service-detail-description">
+                        RESTful and GraphQL APIs designed for performance, security, and scalability.
+                    </p>
+                    <ul class="service-detail-features">
+                        <li><i class="fas fa-check-circle"></i> REST API design</li>
+                        <li><i class="fas fa-check-circle"></i> Authentication & authorization</li>
+                        <li><i class="fas fa-check-circle"></i> API documentation</li>
+                        <li><i class="fas fa-check-circle"></i> Rate limiting</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="service-detail-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-icon-large">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <div class="service-detail-content">
+                    <h3 class="service-detail-title">Deployment & DevOps</h3>
+                    <p class="service-detail-description">
+                        Cloud deployment, CI/CD pipelines, and infrastructure management.
+                    </p>
+                    <ul class="service-detail-features">
+                        <li><i class="fas fa-check-circle"></i> AWS/GCP deployment</li>
+                        <li><i class="fas fa-check-circle"></i> Docker containerization</li>
+                        <li><i class="fas fa-check-circle"></i> CI/CD setup</li>
+                        <li><i class="fas fa-check-circle"></i> Monitoring & logging</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="service-detail-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-icon-large">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="service-detail-content">
+                    <h3 class="service-detail-title">Maintenance & Support</h3>
+                    <p class="service-detail-description">
+                        Ongoing support, updates, and optimization for your Django applications.
+                    </p>
+                    <ul class="service-detail-features">
+                        <li><i class="fas fa-check-circle"></i> Bug fixes</li>
+                        <li><i class="fas fa-check-circle"></i> Security updates</li>
+                        <li><i class="fas fa-check-circle"></i> Performance optimization</li>
+                        <li><i class="fas fa-check-circle"></i> Feature additions</li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="section process-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">How I Work</span>
+            <h2 class="section-title">My Development Process</h2>
+        </div>
+        
+        <div class="process-grid">
+            <div class="process-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="process-number">01</div>
+                <div class="process-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h4>Discovery</h4>
+                <p>Understanding your requirements, goals, and target audience through detailed consultation.</p>
+            </div>
+            
+            <div class="process-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="process-number">02</div>
+                <div class="process-icon">
+                    <i class="fas fa-pencil-ruler"></i>
+                </div>
+                <h4>Planning</h4>
+                <p>Creating wireframes, technical architecture, and project roadmap with clear milestones.</p>
+            </div>
+            
+            <div class="process-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="process-number">03</div>
+                <div class="process-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h4>Development</h4>
+                <p>Writing clean, tested code with regular updates and iterative feedback loops.</p>
+            </div>
+            
+            <div class="process-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="process-number">04</div>
+                <div class="process-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h4>Deployment</h4>
+                <p>Launching your application with monitoring, documentation, and ongoing support.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="section pricing-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Pricing</span>
+            <h2 class="section-title">Flexible Engagement Models</h2>
+        </div>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="pricing-header">
+                    <h4>Hourly</h4>
+                    <div class="pricing-price">
+                        <span class="currency">$</span>
+                        <span class="amount">75</span>
+                        <span class="period">/hour</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Flexible scheduling</li>
+                    <li><i class="fas fa-check"></i> Perfect for small tasks</li>
+                    <li><i class="fas fa-check"></i> Weekly invoicing</li>
+                    <li><i class="fas fa-check"></i> Time tracking included</li>
+                </ul>
+                <a href="{% url 'contact:contact' %}" class="btn btn-outline-primary w-100">Get Started</a>
+            </div>
+            
+            <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="100">
+                <div class="pricing-badge">Popular</div>
+                <div class="pricing-header">
+                    <h4>Project Based</h4>
+                    <div class="pricing-price">
+                        <span class="currency">$</span>
+                        <span class="amount">5K</span>
+                        <span class="period">+</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Fixed scope & price</li>
+                    <li><i class="fas fa-check"></i> Milestone payments</li>
+                    <li><i class="fas fa-check"></i> Dedicated timeline</li>
+                    <li><i class="fas fa-check"></i> Post-launch support</li>
+                </ul>
+                <a href="{% url 'contact:contact' %}" class="btn btn-primary w-100">Get Started</a>
+            </div>
+            
+            <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="pricing-header">
+                    <h4>Retainer</h4>
+                    <div class="pricing-price">
+                        <span class="currency">$</span>
+                        <span class="amount">3K</span>
+                        <span class="period">/month</span>
+                    </div>
+                </div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Priority support</li>
+                    <li><i class="fas fa-check"></i> Monthly hours included</li>
+                    <li><i class="fas fa-check"></i> Ongoing maintenance</li>
+                    <li><i class="fas fa-check"></i> Regular updates</li>
+                </ul>
+                <a href="{% url 'contact:contact' %}" class="btn btn-outline-primary w-100">Get Started</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Ready to Start Your Project?</h2>
+            <p class="cta-description">
+                Let's discuss how I can help bring your ideas to life.
+            </p>
+            <div class="cta-actions">
+                <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-paper-plane"></i>
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.services-detail-section {
+    background: var(--bg-primary);
+}
+
+.services-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 32px;
+}
+
+.service-detail-card {
+    display: flex;
+    gap: 24px;
+    background: var(--bg-secondary);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.service-detail-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.service-icon-large {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+}
+
+.service-detail-title {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+}
+
+.service-detail-description {
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.service-detail-features {
+    list-style: none;
+}
+
+.service-detail-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    color: var(--text-secondary);
+}
+
+.service-detail-features li i {
+    color: var(--success-color);
+}
+
+.process-section {
+    background: var(--bg-secondary);
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 32px;
+}
+
+.process-card {
+    text-align: center;
+    padding: 40px 24px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    position: relative;
+}
+
+.process-number {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.process-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.process-card h4 {
+    margin-bottom: 12px;
+}
+
+.process-card p {
+    color: var(--text-secondary);
+    margin-bottom: 0;
+}
+
+.pricing-section {
+    background: var(--bg-primary);
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 32px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.pricing-card {
+    background: var(--bg-secondary);
+    padding: 40px 32px;
+    border-radius: var(--radius-lg);
+    position: relative;
+    text-align: center;
+}
+
+.pricing-card.featured {
+    background: var(--gradient-primary);
+    color: white;
+    transform: scale(1.05);
+}
+
+.pricing-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--warning-color);
+    color: var(--text-primary);
+    padding: 6px 20px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.pricing-header {
+    margin-bottom: 32px;
+}
+
+.pricing-header h4 {
+    margin-bottom: 16px;
+}
+
+.pricing-card.featured .pricing-header h4 {
+    color: white;
+}
+
+.pricing-price {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+}
+
+.pricing-price .currency {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.pricing-price .amount {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.pricing-price .period {
+    font-size: 1rem;
+    align-self: flex-end;
+    color: var(--text-secondary);
+}
+
+.pricing-card.featured .pricing-price .period {
+    color: rgba(255,255,255,0.8);
+}
+
+.pricing-features {
+    list-style: none;
+    margin-bottom: 32px;
+}
+
+.pricing-features li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.pricing-card.featured .pricing-features li {
+    border-bottom-color: rgba(255,255,255,0.2);
+}
+
+.pricing-features li:last-child {
+    border-bottom: none;
+}
+
+.pricing-features li i {
+    color: var(--success-color);
+}
+
+.pricing-card.featured .pricing-features li i {
+    color: rgba(255,255,255,0.9);
+}
+
+@media (max-width: 767.98px) {
+    .services-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .service-detail-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .service-detail-features li {
+        justify-content: center;
+    }
+    
+    .pricing-card.featured {
+        transform: none;
+    }
+}
+</style>
+{% endblock %}

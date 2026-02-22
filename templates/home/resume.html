@@ -1,0 +1,462 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume - {{ personal_info.full_name|default:"Django Developer" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="page-title">My Resume</h1>
+                <p class="page-description">
+                    Professional background and experience
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Resume</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Resume Section -->
+<section class="section resume-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Resume Header -->
+                <div class="resume-header" data-aos="fade-up">
+                    <div class="resume-name">
+                        <h2>{{ personal_info.full_name|default:"Your Name" }}</h2>
+                        <p class="resume-title">{{ personal_info.title|default:"Full Stack Django Developer" }}</p>
+                    </div>
+                    <div class="resume-contact">
+                        {% if personal_info.email %}<span><i class="fas fa-envelope"></i> {{ personal_info.email }}</span>{% endif %}
+                        {% if personal_info.phone %}<span><i class="fas fa-phone"></i> {{ personal_info.phone }}</span>{% endif %}
+                        {% if personal_info.location %}<span><i class="fas fa-map-marker-alt"></i> {{ personal_info.location }}</span>{% endif %}
+                        {% if personal_info.website %}<span><i class="fas fa-globe"></i> {{ personal_info.website }}</span>{% endif %}
+                    </div>
+                    <div class="resume-actions">
+                        {% if personal_info.resume %}
+                        <a href="{{ personal_info.resume.url }}" class="btn btn-primary" target="_blank">
+                            <i class="fas fa-download"></i>
+                            Download PDF
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'contact:contact' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Contact Me
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                {% if personal_info.bio %}
+                <div class="resume-section-block" data-aos="fade-up">
+                    <h3 class="resume-section-title">
+                        <i class="fas fa-user"></i>
+                        Professional Summary
+                    </h3>
+                    <p>{{ personal_info.bio }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Skills -->
+                <div class="resume-section-block" data-aos="fade-up">
+                    <h3 class="resume-section-title">
+                        <i class="fas fa-code"></i>
+                        Technical Skills
+                    </h3>
+                    <div class="resume-skills">
+                        {% for category in skill_categories %}
+                        <div class="skill-category">
+                            <h5>{{ category.name }}</h5>
+                            <div class="skill-tags">
+                                {% for skill in category.skills.all %}
+                                <span class="skill-tag">{{ skill.name }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="skill-category">
+                            <h5>Backend</h5>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Python</span>
+                                <span class="skill-tag">Django</span>
+                                <span class="skill-tag">Django REST Framework</span>
+                                <span class="skill-tag">PostgreSQL</span>
+                                <span class="skill-tag">Redis</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h5>Frontend</h5>
+                            <div class="skill-tags">
+                                <span class="skill-tag">JavaScript</span>
+                                <span class="skill-tag">React</span>
+                                <span class="skill-tag">HTML5/CSS3</span>
+                                <span class="skill-tag">Bootstrap</span>
+                                <span class="skill-tag">Tailwind CSS</span>
+                            </div>
+                        </div>
+                        <div class="skill-category">
+                            <h5>DevOps</h5>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Docker</span>
+                                <span class="skill-tag">AWS</span>
+                                <span class="skill-tag">Git/GitHub</span>
+                                <span class="skill-tag">CI/CD</span>
+                                <span class="skill-tag">Linux</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div class="resume-section-block" data-aos="fade-up">
+                    <h3 class="resume-section-title">
+                        <i class="fas fa-briefcase"></i>
+                        Work Experience
+                    </h3>
+                    <div class="resume-experience">
+                        {% for experience in experiences %}
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <h4>{{ experience.title }}</h4>
+                                <span class="experience-company">{{ experience.company }}</span>
+                                <span class="experience-date">
+                                    {{ experience.start_date|date:"M Y" }} - 
+                                    {% if experience.is_current %}Present{% else %}{{ experience.end_date|date:"M Y" }}{% endif %}
+                                </span>
+                            </div>
+                            <p class="experience-description">{{ experience.description }}</p>
+                            {% if experience.technologies %}
+                            <div class="experience-tech">
+                                {% for tech in experience.technologies.split %}
+                                <span class="tech-badge">{{ tech }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <h4>Senior Django Developer</h4>
+                                <span class="experience-company">Tech Solutions Inc.</span>
+                                <span class="experience-date">Jan 2021 - Present</span>
+                            </div>
+                            <p class="experience-description">
+                                Lead development of scalable web applications using Django and modern technologies. 
+                                Mentored junior developers and implemented best practices for code quality.
+                            </p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="resume-section-block" data-aos="fade-up">
+                    <h3 class="resume-section-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Education
+                    </h3>
+                    <div class="resume-education">
+                        {% for education in educations %}
+                        <div class="education-item">
+                            <h4>{{ education.degree }}</h4>
+                            <p class="education-institution">{{ education.institution }}</p>
+                            {% if education.field_of_study %}
+                            <p class="education-field">{{ education.field_of_study }}</p>
+                            {% endif %}
+                            <span class="education-date">
+                                {{ education.start_date|date:"Y" }} - 
+                                {% if education.is_current %}Present{% else %}{{ education.end_date|date:"Y" }}{% endif %}
+                            </span>
+                            {% if education.gpa %}
+                            <span class="education-gpa">GPA: {{ education.gpa }}</span>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <div class="education-item">
+                            <h4>Bachelor of Science in Computer Science</h4>
+                            <p class="education-institution">University Name</p>
+                            <span class="education-date">2015 - 2019</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                {% if certifications %}
+                <div class="resume-section-block" data-aos="fade-up">
+                    <h3 class="resume-section-title">
+                        <i class="fas fa-certificate"></i>
+                        Certifications
+                    </h3>
+                    <div class="resume-certifications">
+                        {% for cert in certifications %}
+                        <div class="certification-item">
+                            <h4>{{ cert.name }}</h4>
+                            <p>{{ cert.issuing_organization }}</p>
+                            <span>{{ cert.issue_date|date:"M Y" }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.resume-section {
+    background: var(--bg-primary);
+    padding: 60px 0 100px;
+}
+
+.resume-header {
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    margin-bottom: 40px;
+}
+
+.resume-name h2 {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+.resume-title {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.resume-contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.resume-contact span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.resume-contact i {
+    color: var(--primary-color);
+}
+
+.resume-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.resume-section-block {
+    background: var(--bg-secondary);
+    padding: 32px 40px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+}
+
+.resume-section-title {
+    font-size: 1.25rem;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.resume-section-title i {
+    color: var(--primary-color);
+}
+
+.skill-category {
+    margin-bottom: 20px;
+}
+
+.skill-category:last-child {
+    margin-bottom: 0;
+}
+
+.skill-category h5 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: var(--text-secondary);
+}
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill-tag {
+    padding: 6px 14px;
+    background: var(--bg-primary);
+    border-radius: 50px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.experience-item {
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.experience-item:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.experience-header {
+    margin-bottom: 12px;
+}
+
+.experience-header h4 {
+    font-size: 1.125rem;
+    margin-bottom: 4px;
+}
+
+.experience-company {
+    color: var(--primary-color);
+    font-weight: 500;
+    margin-right: 16px;
+}
+
+.experience-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.experience-description {
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.experience-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tech-badge {
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.education-item {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.education-item:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.education-item h4 {
+    font-size: 1.125rem;
+    margin-bottom: 4px;
+}
+
+.education-institution {
+    color: var(--primary-color);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.education-field {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    margin-bottom: 8px;
+}
+
+.education-date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-right: 16px;
+}
+
+.education-gpa {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.certification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.certification-item:last-child {
+    border-bottom: none;
+}
+
+.certification-item h4 {
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.certification-item p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0;
+}
+
+.certification-item span {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+@media (max-width: 767.98px) {
+    .resume-header {
+        padding: 24px;
+    }
+    
+    .resume-name h2 {
+        font-size: 1.75rem;
+    }
+    
+    .resume-contact {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .resume-section-block {
+        padding: 24px;
+    }
+    
+    .certification-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}
+</style>
+{% endblock %}

@@ -3,7 +3,7 @@ Django settings for portfolio project.
 
 A modern, professional portfolio website showcasing Django development skills.
 """
-
+#from decouple import config
 from pathlib import Path
 import os
 
@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = [".railway.app", "web-production-5cb8c.up.railway.app"
 ]

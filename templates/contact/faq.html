@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="page-title">Frequently Asked Questions</h1>
+                <p class="page-description">
+                    Find answers to common questions
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'contact:contact' %}">Contact</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section faq-page-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                {% if faqs %}
+                <div class="accordion faq-accordion" id="faqAccordion" data-aos="fade-up">
+                    {% for faq in faqs %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" 
+                                    type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq{{ forloop.counter }}">
+                                <span class="faq-number">{{ forloop.counter|stringformat:"02d" }}</span>
+                                {{ faq.question }}
+                            </button>
+                        </h2>
+                        <div id="faq{{ forloop.counter }}" 
+                             class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
+                             data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ faq.answer|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <!-- Default FAQs -->
+                <div class="accordion faq-accordion" id="faqAccordion" data-aos="fade-up">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                <span class="faq-number">01</span>
+                                What is your typical project timeline?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Project timelines vary based on complexity. A simple website typically takes 2-4 weeks, 
+                                while complex web applications may take 2-3 months. I'll provide a detailed timeline 
+                                during our initial consultation based on your specific requirements.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                <span class="faq-number">02</span>
+                                How do you handle project communication?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                I believe in transparent communication. I use tools like Slack, email, and video calls 
+                                for regular updates. You'll receive weekly progress reports, and I'm always available 
+                                for questions or concerns throughout the project.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                <span class="faq-number">03</span>
+                                What technologies do you specialize in?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                I specialize in Python/Django for backend development, PostgreSQL for databases, 
+                                and modern frontend technologies like React, JavaScript, and Bootstrap/Tailwind CSS. 
+                                I also have experience with Docker, AWS, and CI/CD pipelines.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                <span class="faq-number">04</span>
+                                Do you provide ongoing support after project completion?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! I offer various support packages including bug fixes, security updates, 
+                                performance optimization, and feature additions. I also provide documentation 
+                                and training to help your team manage the application effectively.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                <span class="faq-number">05</span>
+                                What is your pricing structure?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                I offer flexible pricing models: hourly rates for small tasks, fixed-price for 
+                                well-defined projects, and monthly retainers for ongoing work. Contact me for 
+                                a detailed quote based on your project requirements.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                <span class="faq-number">06</span>
+                                Can you work with existing codebases?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! I have experience working with existing Django applications, 
+                                refactoring legacy code, and modernizing older systems. I'll start with a 
+                                code audit to understand the current state and recommend the best approach.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Still Have Questions -->
+<section class="section cta-section cta-light">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Still Have Questions?</h2>
+            <p class="cta-description">
+                Don't hesitate to reach out. I'm here to help!
+            </p>
+            <div class="cta-actions">
+                <a href="{% url 'contact:contact' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-envelope"></i>
+                    Contact Me
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.faq-page-section {
+    background: var(--bg-primary);
+    padding: 80px 0;
+}
+
+.faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.faq-accordion .accordion-item {
+    background: var(--bg-secondary);
+    border: none;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.faq-accordion .accordion-button {
+    padding: 24px 32px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.faq-accordion .accordion-button:not(.collapsed) {
+    background: var(--bg-secondary);
+    color: var(--primary-color);
+    box-shadow: none;
+}
+
+.faq-accordion .accordion-button:focus {
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.faq-accordion .accordion-button::after {
+    background-size: 1.25rem;
+}
+
+.faq-number {
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.faq-accordion .accordion-body {
+    padding: 0 32px 24px 88px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+.cta-light {
+    background: var(--bg-secondary);
+}
+
+.cta-light .cta-title {
+    color: var(--text-primary);
+}
+
+.cta-light .cta-description {
+    color: var(--text-secondary);
+}
+
+@media (max-width: 767.98px) {
+    .faq-accordion .accordion-button {
+        padding: 20px 24px;
+        font-size: 1rem;
+    }
+    
+    .faq-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+    
+    .faq-accordion .accordion-body {
+        padding: 0 24px 20px 72px;
+    }
+}
+</style>
+{% endblock %}

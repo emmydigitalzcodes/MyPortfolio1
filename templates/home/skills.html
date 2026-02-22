@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+
+{% block title %}Skills - {{ personal_info.full_name|default:"Django Developer" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="page-title">My Skills</h1>
+                <p class="page-description">
+                    Technologies and tools I work with
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Skills</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="section skills-page-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Expertise</span>
+            <h2 class="section-title">Technical Skills</h2>
+            <p class="section-description">
+                My toolkit for building modern web applications
+            </p>
+        </div>
+        
+        <!-- Skills by Category -->
+        <div class="skills-categories">
+            {% for category in skill_categories %}
+            <div class="skill-category-section" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <h3 class="category-title">
+                    <i class="fas fa-layer-group"></i>
+                    {{ category.name }}
+                </h3>
+                <div class="skills-grid-page">
+                    {% for skill in category.skills.all %}
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page">
+                                {% if skill.icon_class %}
+                                <i class="{{ skill.icon_class }}"></i>
+                                {% endif %}
+                                {{ skill.name }}
+                            </span>
+                            <span class="skill-percentage-page">{{ skill.proficiency }}%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: {{ skill.proficiency }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default Skills -->
+            <div class="skill-category-section" data-aos="fade-up">
+                <h3 class="category-title">
+                    <i class="fas fa-server"></i>
+                    Backend Development
+                </h3>
+                <div class="skills-grid-page">
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-python"></i> Python</span>
+                            <span class="skill-percentage-page">95%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-django"></i> Django</span>
+                            <span class="skill-percentage-page">95%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fas fa-database"></i> PostgreSQL</span>
+                            <span class="skill-percentage-page">90%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fas fa-server"></i> Django REST Framework</span>
+                            <span class="skill-percentage-page">88%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 88%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="skill-category-section" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="category-title">
+                    <i class="fas fa-laptop-code"></i>
+                    Frontend Development
+                </h3>
+                <div class="skills-grid-page">
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-js"></i> JavaScript</span>
+                            <span class="skill-percentage-page">85%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-react"></i> React</span>
+                            <span class="skill-percentage-page">80%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-html5"></i> HTML5/CSS3</span>
+                            <span class="skill-percentage-page">92%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-bootstrap"></i> Bootstrap/Tailwind</span>
+                            <span class="skill-percentage-page">90%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 90%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="skill-category-section" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="category-title">
+                    <i class="fas fa-cloud"></i>
+                    DevOps & Tools
+                </h3>
+                <div class="skills-grid-page">
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-docker"></i> Docker</span>
+                            <span class="skill-percentage-page">82%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 82%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-aws"></i> AWS</span>
+                            <span class="skill-percentage-page">78%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-git-alt"></i> Git/GitHub</span>
+                            <span class="skill-percentage-page">90%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card-page">
+                        <div class="skill-header-page">
+                            <span class="skill-name-page"><i class="fab fa-linux"></i> Linux</span>
+                            <span class="skill-percentage-page">85%</span>
+                        </div>
+                        <div class="skill-progress-page">
+                            <div class="skill-progress-bar-page" style="width: 85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Technologies Cloud -->
+        <div class="technologies-cloud-section" data-aos="fade-up">
+            <h3 class="section-title text-center mb-5">Technologies I Use</h3>
+            <div class="technologies-cloud">
+                {% for tech in technologies %}
+                <a href="{% url 'projects:technology' tech.slug %}" class="tech-cloud-item" style="background-color: {{ tech.color }}20; color: {{ tech.color }}; border-color: {{ tech.color }}">
+                    {% if tech.icon_class %}
+                    <i class="{{ tech.icon_class }}"></i>
+                    {% endif %}
+                    {{ tech.name }}
+                </a>
+                {% empty %}
+                <span class="tech-cloud-item" style="background-color: #092e2020; color: #092e20;"><i class="fab fa-python"></i> Python</span>
+                <span class="tech-cloud-item" style="background-color: #092e2020; color: #092e20;"><i class="fab fa-django"></i> Django</span>
+                <span class="tech-cloud-item" style="background-color: #33679120; color: #336791;"><i class="fas fa-database"></i> PostgreSQL</span>
+                <span class="tech-cloud-item" style="background-color: #2496ed20; color: #2496ed;"><i class="fab fa-docker"></i> Docker</span>
+                <span class="tech-cloud-item" style="background-color: #ff990020; color: #ff9900;"><i class="fab fa-aws"></i> AWS</span>
+                <span class="tech-cloud-item" style="background-color: #f7df1e20; color: #bfa800;"><i class="fab fa-js"></i> JavaScript</span>
+                <span class="tech-cloud-item" style="background-color: #61dafb20; color: #087ea4;"><i class="fab fa-react"></i> React</span>
+                <span class="tech-cloud-item" style="background-color: #7952b320; color: #7952b3;"><i class="fab fa-bootstrap"></i> Bootstrap</span>
+                <span class="tech-cloud-item" style="background-color: #38bdf820; color: #0ea5e9;"><i class="fas fa-wind"></i> Tailwind</span>
+                <span class="tech-cloud-item" style="background-color: #f0503220; color: #f05032;"><i class="fab fa-git-alt"></i> Git</span>
+                <span class="tech-cloud-item" style="background-color: #dc382d20; color: #dc382d;"><i class="fas fa-database"></i> Redis</span>
+                <span class="tech-cloud-item" style="background-color: #00000020; color: #000000;"><i class="fab fa-github"></i> GitHub</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Need These Skills?</h2>
+            <p class="cta-description">
+                Let's discuss how I can help with your project.
+            </p>
+            <div class="cta-actions">
+                <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-paper-plane"></i>
+                    Hire Me
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.skills-page-section {
+    background: var(--bg-primary);
+}
+
+.skills-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    margin-bottom: 80px;
+}
+
+.skill-category-section {
+    background: var(--bg-secondary);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+}
+
+.category-title {
+    font-size: 1.5rem;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-title i {
+    color: var(--primary-color);
+}
+
+.skills-grid-page {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.skill-card-page {
+    background: var(--bg-primary);
+    padding: 24px;
+    border-radius: var(--radius);
+}
+
+.skill-header-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.skill-name-page {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.skill-name-page i {
+    color: var(--primary-color);
+}
+
+.skill-percentage-page {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.skill-progress-page {
+    height: 10px;
+    background: var(--bg-tertiary);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.skill-progress-bar-page {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 5px;
+    transition: width 1s ease;
+}
+
+.technologies-cloud-section {
+    padding: 60px 0;
+}
+
+.technologies-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+
+.tech-cloud-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 500;
+    border: 2px solid;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.tech-cloud-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+@media (max-width: 767.98px) {
+    .skill-category-section {
+        padding: 24px;
+    }
+    
+    .skills-grid-page {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

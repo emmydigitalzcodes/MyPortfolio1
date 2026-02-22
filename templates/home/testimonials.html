@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+
+{% block title %}Testimonials - {{ personal_info.full_name|default:"Django Developer" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="page-title">Client Testimonials</h1>
+                <p class="page-description">
+                    What clients say about working with me
+                </p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a href="{% url 'home:home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Testimonials</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="section testimonials-page-section">
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <span class="section-subtitle">Testimonials</span>
+            <h2 class="section-title">What People Say</h2>
+        </div>
+        
+        <div class="testimonials-grid">
+            {% for testimonial in testimonials %}
+            <div class="testimonial-card-large" data-aos="fade-up" data-aos-delay="{{ forloop.counter|add:100 }}">
+                <div class="testimonial-rating-large">
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= testimonial.rating %}
+                        <i class="fas fa-star"></i>
+                        {% else %}
+                        <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="testimonial-quote">
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p>{{ testimonial.content }}</p>
+                </div>
+                <div class="testimonial-author-large">
+                    {% if testimonial.photo %}
+                    <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}" class="author-image-large">
+                    {% else %}
+                    <div class="author-avatar-large">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    {% endif %}
+                    <div class="author-info-large">
+                        <h5>{{ testimonial.name }}</h5>
+                        <p>{{ testimonial.position }}{% if testimonial.company %}, {{ testimonial.company }}{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Default Testimonials -->
+            <div class="testimonial-card-large" data-aos="fade-up">
+                <div class="testimonial-rating-large">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="testimonial-quote">
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p>Working with this developer was an absolute pleasure. They delivered our Django project on time and exceeded all expectations. The code quality is outstanding.</p>
+                </div>
+                <div class="testimonial-author-large">
+                    <div class="author-avatar-large">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="author-info-large">
+                        <h5>John Smith</h5>
+                        <p>CTO, TechStart Inc.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card-large" data-aos="fade-up" data-aos-delay="100">
+                <div class="testimonial-rating-large">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="testimonial-quote">
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p>Exceptional technical skills and great communication throughout the project. They understood our requirements perfectly and delivered a scalable solution.</p>
+                </div>
+                <div class="testimonial-author-large">
+                    <div class="author-avatar-large">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="author-info-large">
+                        <h5>Sarah Johnson</h5>
+                        <p>Product Manager, InnovateCo</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="testimonial-card-large" data-aos="fade-up" data-aos-delay="200">
+                <div class="testimonial-rating-large">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="testimonial-quote">
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p>Highly recommend! They transformed our legacy system into a modern Django application. The attention to detail and best practices followed were impressive.</p>
+                </div>
+                <div class="testimonial-author-large">
+                    <div class="author-avatar-large">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="author-info-large">
+                        <h5>Michael Chen</h5>
+                        <p>Founder, Digital Agency</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav aria-label="Testimonials pagination" class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section cta-section">
+    <div class="container">
+        <div class="cta-content" data-aos="zoom-in">
+            <h2 class="cta-title">Want to Work Together?</h2>
+            <p class="cta-description">
+                Let's create something amazing. I'd love to hear about your project.
+            </p>
+            <div class="cta-actions">
+                <a href="{% url 'contact:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-paper-plane"></i>
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.testimonials-page-section {
+    background: var(--bg-primary);
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 32px;
+}
+
+.testimonial-card-large {
+    background: var(--bg-secondary);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.testimonial-card-large:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.testimonial-rating-large {
+    color: var(--warning-color);
+    font-size: 1.125rem;
+    margin-bottom: 20px;
+}
+
+.testimonial-quote {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.quote-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    opacity: 0.3;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.testimonial-quote p {
+    font-size: 1.0625rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+.testimonial-author-large {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.author-image-large,
+.author-avatar-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.author-avatar-large {
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.75rem;
+}
+
+.author-info-large h5 {
+    font-size: 1.125rem;
+    margin-bottom: 4px;
+}
+
+.author-info-large p {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonial-card-large {
+        padding: 24px;
+    }
+}
+</style>
+{% endblock %}

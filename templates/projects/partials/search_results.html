@@ -1,0 +1,104 @@
+{% if projects %}
+<div class="search-results">
+    {% for project in projects %}
+    <a href="{% url 'projects:detail' project.slug %}" class="search-result-item">
+        {% if project.thumbnail %}
+        <img src="{{ project.thumbnail }}" alt="{{ project.title }}" class="search-result-image">
+        {% else %}
+        <div class="search-result-placeholder">
+            <i class="fas fa-code"></i>
+        </div>
+        {% endif %}
+        <div class="search-result-content">
+            <h6>{{ project.title }}</h6>
+            <p>{{ project.description }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="search-no-results">
+    <i class="fas fa-search"></i>
+    <p>No projects found for "{{ query }}"</p>
+</div>
+{% endif %}
+
+<style>
+.search-results {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color var(--transition-fast);
+}
+
+.search-result-item:hover {
+    background-color: var(--bg-secondary);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-image,
+.search-result-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.search-result-placeholder {
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.search-result-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-result-content h6 {
+    margin-bottom: 4px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-content p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-no-results {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.search-no-results i {
+    font-size: 3rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.search-no-results p {
+    color: var(--text-secondary);
+    margin-bottom: 0;
+}
+</style>
