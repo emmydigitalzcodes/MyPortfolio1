@@ -129,9 +129,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# WhiteNoise configuration for static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_MAX_AGE = 31536000
 
 # Media files
 MEDIA_URL = '/media/'
