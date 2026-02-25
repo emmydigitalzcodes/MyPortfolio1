@@ -18,7 +18,12 @@ SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-dev-key-change
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = [".railway.app", "web-production-5cb8c.up.railway.app"]
+ALLOWED_HOSTS = [
+    '.railway.app',  # Allows all railway subdomains
+    'https://web-production-bc6fc.up.railway.app/',  # Your specific domain
+    'localhost',
+    '127.0.0.1',
+]
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 
