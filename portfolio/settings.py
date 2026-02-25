@@ -20,12 +20,11 @@ DEBUG = config('DJANGO_DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     '.railway.app',  # Allows all railway subdomains
-    'https://web-production-bc6fc.up.railway.app/',  # Your specific domain
+    'web-production-bc6fc.up.railway.app',  # Your specific domain (removed https:// and trailing /)
     'localhost',
     '127.0.0.1',
 ]
-if DEBUG:
-    ALLOWED_HOSTS += ['localhost', '127.0.0.1']
+# Remove duplicate localhost entries (they're already in ALLOWED_HOSTS)
 
 # Application definition
 INSTALLED_APPS = [
@@ -84,8 +83,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'portfolio.wsgi.application'
 
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -134,13 +131,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-
-# Media files
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# AWS S3 Configuration
-if not DEBUG:
+# Media files configuration
+if not DEBUG:  # Production - use S3
+    # AWS S3 Configuration
     AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
@@ -153,7 +146,7 @@ if not DEBUG:
         'CacheControl': 'max-age=86400',
     }
     
-    # S3 static and media file storage
+    # S3 storage for media files
     STORAGES = {
         'default': {
             'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
@@ -163,9 +156,8 @@ if not DEBUG:
         },
     }
     
-    # Media files will use S3 automatically via STORAGES['default']
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
-else:
+else:  # Development - local media storage
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -177,7 +169,8 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Email Configuration (for contact form)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Use environment variable to control email backend
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = True
@@ -186,9 +179,10 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 CONTACT_EMAIL = config('CONTACT_EMAIL', default=EMAIL_HOST_USER)
 
-# For development, use console backend
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Remove the console backend override - let EMAIL_BACKEND env variable control it
+# This way you can set:
+# - In development: EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+# - In production: EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 
 # Security Settings (enable in production)
 if not DEBUG:
@@ -216,11 +210,11 @@ GITHUB_URL = "https://github.com/emmydigitalzcodes"
 LINKEDIN_URL = "https://linkedin.com/in/chukwuemeka-moses-1b17861ba"
 TWITTER_URL = "https://twitter.com/don_smithz"
 
-# reCAPTCHA Settings (add your keys in production)
+# reCAPTCHA Settings
 RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY', default='')
 RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY', default='')
 
-# Google Analytics (add your tracking ID in production)
+# Google Analytics
 GOOGLE_ANALYTICS_ID = config('GOOGLE_ANALYTICS_ID', default='')
 
 # Logging Configuration
