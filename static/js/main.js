@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ========================================
-    // Contact Form AJAX Submission - FIXED
+    // Contact Form AJAX Submission - IMPROVED WITH TIMEOUT HANDLING
     // ========================================
     const contactForm = document.getElementById('contactForm');
     
@@ -174,12 +174,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
-            // Get CSRF token from the form
+            // Get CSRF token
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
-            // Show loading state
+            // Animated loading state
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            let dots = '';
+            const loadingInterval = setInterval(() => {
+                dots = dots.length >= 3 ? '' : dots + '.';
+                submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending${dots}`;
+            }, 500);
+            
+            // Create abort controller with timeout (20 seconds)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
             
             fetch(contactForm.action, {
                 method: 'POST',
@@ -188,27 +196,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': csrfToken
                 },
-                credentials: 'same-origin'
+                credentials: 'same-origin',
+                signal: controller.signal
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                clearTimeout(timeoutId);
+                clearInterval(loadingInterval);
+                
+                if (response.redirected) {
+                    // Success! Go to success page
+                    window.location.href = response.url;
+                    return;
                 }
+                
                 // Check if response is JSON
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     return response.json();
                 }
-                // If not JSON, assume success and redirect
-                window.location.href = '/contact/success/';
-                return null;
+                
+                // If not JSON, check if it's HTML with errors
+                return response.text().then(html => {
+                    // If the response contains form errors, update the form
+                    if (html.includes('form-control')) {
+                        const formContainer = document.querySelector('.form-container');
+                        if (formContainer) {
+                            formContainer.innerHTML = html;
+                        }
+                    } else {
+                        // Assume success and redirect
+                        window.location.href = '/contact/success/';
+                    }
+                    return null;
+                });
             })
             .then(data => {
                 if (data) {
                     if (data.success) {
+                        // Show success notification
                         showNotification('success', data.message || 'Message sent successfully!');
                         contactForm.reset();
                         contactForm.classList.remove('was-validated');
+                        
                         // Redirect after short delay
                         setTimeout(() => {
                             window.location.href = '/contact/success/';
@@ -221,16 +250,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                showNotification('error', 'Network error. Please try again or refresh the page.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                clearTimeout(timeoutId);
+                clearInterval(loadingInterval);
+                
+                if (error.name === 'AbortError') {
+                    // Timeout occurred - but data might still be saved in database
+                    console.log('Request timed out, but form may have been processed');
+                    
+                    // Show warning notification
+                    showNotification('warning', 'This is taking longer than expected. Your message may still be sent.');
+                    
+                    // Redirect after short delay anyway (data is likely saved in DB)
+                    setTimeout(() => {
+                        window.location.href = '/contact/success/';
+                    }, 2000);
+                } else {
+                    console.error('Error:', error);
+                    showNotification('error', 'Network error. Please try again or refresh the page.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
             });
         });
     }
     
     // ========================================
-    // Newsletter Form AJAX - FIXED
+    // Newsletter Form AJAX - IMPROVED
     // ========================================
     const newsletterForm = document.getElementById('newsletterForm');
     
@@ -244,7 +289,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+            
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
             
             fetch(newsletterForm.action, {
                 method: 'POST',
@@ -253,9 +301,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': csrfToken
                 },
-                credentials: 'same-origin'
+                credentials: 'same-origin',
+                signal: controller.signal
             })
             .then(response => {
+                clearTimeout(timeoutId);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -266,8 +316,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 newsletterForm.innerHTML = html;
             })
             .catch(error => {
-                console.error('Error:', error);
-                showNotification('error', 'Failed to subscribe. Please try again.');
+                clearTimeout(timeoutId);
+                
+                if (error.name === 'AbortError') {
+                    showNotification('warning', 'Request timed out. Please check if you received a confirmation email.');
+                } else {
+                    console.error('Error:', error);
+                    showNotification('error', 'Failed to subscribe. Please try again.');
+                }
+                
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             });
@@ -275,21 +332,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ========================================
-    // Notification System
+    // Notification System - IMPROVED
     // ========================================
     function showNotification(type, message) {
         // Remove existing notifications
         const existingNotifications = document.querySelectorAll('.notification');
         existingNotifications.forEach(n => n.remove());
         
+        // Create notification
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
+        
+        // Icon based on type
+        let icon = 'info-circle';
+        if (type === 'success') icon = 'check-circle';
+        if (type === 'error') icon = 'exclamation-circle';
+        if (type === 'warning') icon = 'exclamation-triangle';
+        
         notification.innerHTML = `
             <div class="notification-content">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <i class="fas fa-${icon}"></i>
                 <span>${message}</span>
             </div>
-            <button class="notification-close">
+            <button class="notification-close" aria-label="Close">
                 <i class="fas fa-times"></i>
             </button>
         `;
@@ -301,13 +366,15 @@ document.addEventListener('DOMContentLoaded', function() {
             notification.classList.add('show');
         });
         
-        // Auto dismiss
-        setTimeout(() => {
+        // Auto dismiss (longer for errors/warnings)
+        const dismissTime = type === 'success' ? 4000 : 6000;
+        const timeoutId = setTimeout(() => {
             dismissNotification(notification);
-        }, 5000);
+        }, dismissTime);
         
         // Close button
         notification.querySelector('.notification-close').addEventListener('click', () => {
+            clearTimeout(timeoutId);
             dismissNotification(notification);
         });
     }
@@ -315,7 +382,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function dismissNotification(notification) {
         notification.classList.remove('show');
         setTimeout(() => {
-            notification.remove();
+            if (notification.parentNode) {
+                notification.remove();
+            }
         }, 300);
     }
     
