@@ -28,8 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    window.addEventListener('scroll', handleNavbarScroll, { passive: true });
-    handleNavbarScroll(); // Check on load
+    if (navbar) {
+        window.addEventListener('scroll', handleNavbarScroll, { passive: true });
+        handleNavbarScroll(); // Check on load
+    }
     
     // ========================================
     // Theme Toggle (Dark/Light Mode)
@@ -160,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ========================================
-    // Contact Form AJAX Submission
+    // Contact Form AJAX Submission - FIXED
     // ========================================
     const contactForm = document.getElementById('contactForm');
     
@@ -172,6 +174,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
+            // Get CSRF token from the form
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
             // Show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
@@ -180,24 +185,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: 'same-origin'
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                }
+                // If not JSON, assume success and redirect
+                window.location.href = '/contact/success/';
+                return null;
+            })
             .then(data => {
-                if (data.success) {
-                    showNotification('success', data.message);
-                    contactForm.reset();
-                    contactForm.classList.remove('was-validated');
-                } else {
-                    showNotification('error', data.message || 'Something went wrong. Please try again.');
+                if (data) {
+                    if (data.success) {
+                        showNotification('success', data.message || 'Message sent successfully!');
+                        contactForm.reset();
+                        contactForm.classList.remove('was-validated');
+                        // Redirect after short delay
+                        setTimeout(() => {
+                            window.location.href = '/contact/success/';
+                        }, 1500);
+                    } else {
+                        showNotification('error', data.message || 'Something went wrong. Please try again.');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }
                 }
             })
             .catch(error => {
-                showNotification('error', 'Failed to send message. Please try again.');
                 console.error('Error:', error);
-            })
-            .finally(() => {
+                showNotification('error', 'Network error. Please try again or refresh the page.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             });
@@ -205,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // ========================================
-    // Newsletter Form AJAX
+    // Newsletter Form AJAX - FIXED
     // ========================================
     const newsletterForm = document.getElementById('newsletterForm');
     
@@ -216,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(newsletterForm);
             const submitBtn = newsletterForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -224,14 +250,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                },
+                credentials: 'same-origin'
             })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
             .then(html => {
+                // Replace form with response (usually success message)
                 newsletterForm.innerHTML = html;
             })
             .catch(error => {
+                console.error('Error:', error);
                 showNotification('error', 'Failed to subscribe. Please try again.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
@@ -290,26 +325,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const projectFilters = document.querySelectorAll('.project-filter');
     const projectCards = document.querySelectorAll('.project-card');
     
-    projectFilters.forEach(filter => {
-        filter.addEventListener('click', function() {
-            const category = this.dataset.filter;
-            
-            // Update active state
-            projectFilters.forEach(f => f.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Filter projects
-            projectCards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
-                    card.classList.add('fade-in');
-                } else {
-                    card.style.display = 'none';
-                    card.classList.remove('fade-in');
-                }
+    if (projectFilters.length && projectCards.length) {
+        projectFilters.forEach(filter => {
+            filter.addEventListener('click', function() {
+                const category = this.dataset.filter;
+                
+                // Update active state
+                projectFilters.forEach(f => f.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter projects
+                projectCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                        card.classList.add('fade-in');
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.remove('fade-in');
+                    }
+                });
             });
         });
-    });
+    }
     
     // ========================================
     // Lazy Loading Images
@@ -359,12 +396,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch(`/search/?q=${encodeURIComponent(query)}`, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    },
+                    credentials: 'same-origin'
                 })
                 .then(response => response.text())
                 .then(html => {
                     searchResults.innerHTML = html;
                     searchResults.classList.add('show');
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
                 });
             }, 300);
         });
@@ -382,7 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     if (typeof hljs !== 'undefined') {
         document.querySelectorAll('pre code').forEach((block) => {
-            hljs.highlightBlock(block);
+            hljs.highlightElement(block);
         });
     }
     
@@ -404,6 +445,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(() => {
                         this.innerHTML = originalText;
                     }, 2000);
+                }).catch(err => {
+                    console.error('Copy failed:', err);
+                    showNotification('error', 'Failed to copy text');
                 });
             }
         });
