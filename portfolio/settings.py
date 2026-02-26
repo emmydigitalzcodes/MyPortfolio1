@@ -177,8 +177,8 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')  # This should be 
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')  # Your SendGrid API key
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')  # Your verified sender
-CONTACT_EMAIL = config('CONTACT_EMAIL')  # Where you receive messages
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@example.com')  # Your verified sender
+CONTACT_EMAIL = config('CONTACT_EMAIL', default='admin@example.com')  # Where you receive messages
 
 
 # Security Settings (enable in production)
