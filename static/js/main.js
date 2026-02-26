@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // ========================================
-    // Contact Form AJAX Submission - FIXED FOR LOCAL & PRODUCTION
+    // Contact Form AJAX Submission - IMPROVED WITH TIMEOUT HANDLING
     // ========================================
     const contactForm = document.getElementById('contactForm');
     
@@ -174,9 +174,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
-            // Get CSRF token - more reliable method
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
-                              getCookie('csrftoken');
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
             // Animated loading state
             submitBtn.disabled = true;
@@ -186,13 +185,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Sending${dots}`;
             }, 500);
             
-            // Create abort controller with timeout (30 seconds for local)
+            // Create abort controller with timeout (20 seconds)
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000);
-            
-            // Determine if running locally
-            const isLocalhost = window.location.hostname === 'localhost' || 
-                               window.location.hostname === '127.0.0.1';
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
             
             fetch(contactForm.action, {
                 method: 'POST',
@@ -202,49 +197,43 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRFToken': csrfToken
                 },
                 credentials: 'same-origin',
-                signal: controller.signal,
-                mode: 'same-origin' // Important for local development
+                signal: controller.signal
             })
             .then(response => {
                 clearTimeout(timeoutId);
                 clearInterval(loadingInterval);
                 
-                // Check if response is a redirect (success page)
                 if (response.redirected) {
-                    // For localhost, we might want to handle differently
-                    if (isLocalhost) {
-                        // Show success message then redirect
-                        showNotification('success', 'Message sent successfully!');
-                        setTimeout(() => {
-                            window.location.href = response.url;
-                        }, 1500);
-                    } else {
-                        window.location.href = response.url;
-                    }
+                    // Success! Go to success page
+                    window.location.href = response.url;
                     return;
                 }
                 
-                // Check content type
+                // Check if response is JSON
                 const contentType = response.headers.get('content-type');
-                
-                // Handle JSON response
                 if (contentType && contentType.includes('application/json')) {
-                    return response.json().then(data => {
-                        return { type: 'json', data };
-                    });
+                    return response.json();
                 }
                 
-                // Handle HTML response (form errors)
+                // If not JSON, check if it's HTML with errors
                 return response.text().then(html => {
-                    return { type: 'html', data: html };
+                    // If the response contains form errors, update the form
+                    if (html.includes('form-control')) {
+                        const formContainer = document.querySelector('.form-container');
+                        if (formContainer) {
+                            formContainer.innerHTML = html;
+                        }
+                    } else {
+                        // Assume success and redirect
+                        window.location.href = '/contact/success/';
+                    }
+                    return null;
                 });
             })
-            .then(result => {
-                if (!result) return;
-                
-                if (result.type === 'json') {
-                    const data = result.data;
+            .then(data => {
+                if (data) {
                     if (data.success) {
+                        // Show success notification
                         showNotification('success', data.message || 'Message sent successfully!');
                         contactForm.reset();
                         contactForm.classList.remove('was-validated');
@@ -258,42 +247,26 @@ document.addEventListener('DOMContentLoaded', function() {
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalText;
                     }
-                } else if (result.type === 'html') {
-                    // Replace form with error response
-                    const formContainer = contactForm.parentElement;
-                    if (formContainer) {
-                        formContainer.innerHTML = result.data;
-                    }
                 }
             })
             .catch(error => {
                 clearTimeout(timeoutId);
                 clearInterval(loadingInterval);
                 
-                console.error('Fetch error:', error);
-                
                 if (error.name === 'AbortError') {
-                    // Timeout occurred
-                    showNotification('warning', 'Request timed out. Your message may still be sent.');
+                    // Timeout occurred - but data might still be saved in database
+                    console.log('Request timed out, but form may have been processed');
                     
-                    // For localhost, try traditional form submission as fallback
-                    if (isLocalhost) {
-                        showNotification('info', 'Trying traditional submission...');
-                        contactForm.submit(); // Fallback to traditional form post
-                    } else {
-                        setTimeout(() => {
-                            window.location.href = '/contact/success/';
-                        }, 2000);
-                    }
-                } else {
-                    // Network error - try traditional form submission
-                    showNotification('error', 'Network error. Trying traditional submission...');
+                    // Show warning notification
+                    showNotification('warning', 'This is taking longer than expected. Your message may still be sent.');
                     
-                    // Fallback to traditional form post
+                    // Redirect after short delay anyway (data is likely saved in DB)
                     setTimeout(() => {
-                        contactForm.submit();
-                    }, 1000);
-                    
+                        window.location.href = '/contact/success/';
+                    }, 2000);
+                } else {
+                    console.error('Error:', error);
+                    showNotification('error', 'Network error. Please try again or refresh the page.');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                 }
@@ -301,24 +274,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Helper function to get CSRF token from cookies
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    
     // ========================================
-    // Newsletter Form AJAX - FIXED
+    // Newsletter Form AJAX - IMPROVED
     // ========================================
     const newsletterForm = document.getElementById('newsletterForm');
     
@@ -329,8 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(newsletterForm);
             const submitBtn = newsletterForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
-                              getCookie('csrftoken');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
@@ -346,8 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRFToken': csrfToken
                 },
                 credentials: 'same-origin',
-                signal: controller.signal,
-                mode: 'same-origin'
+                signal: controller.signal
             })
             .then(response => {
                 clearTimeout(timeoutId);
