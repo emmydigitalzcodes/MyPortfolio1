@@ -24,10 +24,10 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
 ]
-# Remove duplicate localhost entries (they're already in ALLOWED_HOSTS)
 
 # Application definition
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
