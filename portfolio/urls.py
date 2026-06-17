@@ -2,6 +2,7 @@
 URL configuration for portfolio project.
 """
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -20,7 +21,11 @@ sitemaps = {
     'categories': CategorySitemap,
 }
 
+def health(request):
+    return HttpResponse("OK")
+
 urlpatterns = [
+    path('health/', health),
     # Admin
     path('admin/', admin.site.urls),
     
