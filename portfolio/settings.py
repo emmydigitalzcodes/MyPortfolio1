@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     #'jazzmin',
-    'django-unfold',
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
