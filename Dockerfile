@@ -11,7 +11,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PORT=8000
+    PORT=8000 \
+    SECRET_KEY=dummy-build-key \
+    DJANGO_SETTINGS_MODULE=portfolio.settings
 
 # Set work directory
 WORKDIR /app
@@ -37,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create directories for media and static files
+# Create directories for media, static files and logs
 RUN mkdir -p /app/media /app/staticfiles /app/logs
 
 # Install Python dependencies
@@ -48,8 +50,8 @@ RUN pip install --upgrade pip && \
 # Copy project files
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Collect static files using dummy key (real key injected at runtime)
+RUN SECRET_KEY=dummy-build-key python manage.py collectstatic --noinput
 
 # Create non-root user for security
 RUN useradd -m -u 1000 django && \
@@ -59,25 +61,17 @@ RUN useradd -m -u 1000 django && \
 USER django
 
 # Expose port
-EXPOSE $PORT
+EXPOSE 8000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:$PORT/health/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-8000}/health/ || exit 1
 
-# Start command - Railway provides PORT env variable
+# Start command
 CMD sh -c "python manage.py migrate --noinput && \
     gunicorn portfolio.wsgi:application \
-    --bind 0.0.0.0:$PORT \
-    --workers 4 \
-    --worker-class gthread \
-    --threads 4 \
-    --worker-tmp-dir /dev/shm \
+    --bind 0.0.0.0:${PORT:-8000} \
+    --workers 2 \
     --timeout 120 \
-    --keep-alive 5 \
-    --max-requests 1000 \
-    --max-requests-jitter 50 \
     --access-logfile - \
-    --error-logfile - \
-    --capture-output \
-    --enable-stdio-inheritance"
+    --error-logfile -"
