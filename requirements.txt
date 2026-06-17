@@ -67,3 +67,5 @@ tzdata==2025.3
 asgiref==3.11.1
 django-appconf==1.2.0
 packaging==26.0
+
+django-jazzmin
