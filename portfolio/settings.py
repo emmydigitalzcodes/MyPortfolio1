@@ -120,7 +120,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # Whitenoise serves static files
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
