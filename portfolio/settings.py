@@ -183,14 +183,18 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Email Configuration (for contact form)
 # Use environment variable to control email backend
 # Email Configuration - SendGrid SMTP
-EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST = config('EMAIL_HOST', default='smtp.sendgrid.net')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')  # This should be 'apikey'
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')  # Your SendGrid API key
-EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@example.com')  # Your verified sender
-CONTACT_EMAIL = config('CONTACT_EMAIL', default='admin@example.com')  # Where you receive messages
+# EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+# EMAIL_HOST = config('EMAIL_HOST', default='smtp.sendgrid.net')
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='apikey')  # This should be 'apikey'
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')  # Your SendGrid API key
+# EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+# EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@example.com')  # Your verified sender
+# CONTACT_EMAIL = config('CONTACT_EMAIL', default='admin@example.com')  # Where you receive messages
+
+RESEND_API_KEY = config('RESEND_API_KEY', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='onboarding@resend.dev')
+CONTACT_EMAIL = config('CONTACT_EMAIL', default='')
 
 
 # Security Settings (enable in production)
