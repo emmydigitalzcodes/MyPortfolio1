@@ -26,7 +26,6 @@ def health(request):
     return HttpResponse("OK")
 
 
-def test_email(request):
     """Temporary test endpoint - remove after confirming email works"""
     try:
         import resend
@@ -44,7 +43,6 @@ def test_email(request):
 
 urlpatterns = [
     path('health/', health),
-    path('test-email/', test_email),  # ← remove after testing
 
     # Admin
     path('admin/', admin.site.urls),
