@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import path, include
 from django.conf import settings
+from django.core.mail import send_mail
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
@@ -24,8 +25,22 @@ sitemaps = {
 def health(request):
     return HttpResponse("OK")
 
+def test_email(request):
+    try:
+        send_mail(
+            'Test from Railway',
+            'Email is working!',
+            settings.DEFAULT_FROM_EMAIL,
+            [settings.CONTACT_EMAIL],
+            fail_silently=False
+        )
+        return HttpResponse("Email sent successfully!")
+    except Exception as e:
+        return HttpResponse(f"Email failed: {str(e)}")
+
 urlpatterns = [
     path('health/', health),
+    path('test-email/', test_email),
     # Admin
     path('admin/', admin.site.urls),
     
