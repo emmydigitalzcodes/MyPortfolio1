@@ -52,6 +52,7 @@ COPY . .
 
 # Collect static files using dummy key (real key injected at runtime)
 RUN SECRET_KEY=dummy-build-key python manage.py collectstatic --noinput
+RUN DJANGO_DEBUG=True SECRET_KEY=dummy-build-key python manage.py collectstatic --noinput --ignore=*.scss --ignore=select2/i18n/*.js
 
 # Create non-root user for security
 RUN useradd -m -u 1000 django && \
